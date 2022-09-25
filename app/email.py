@@ -18,7 +18,7 @@ class EmailSchema(BaseModel):
 class Email:
     def __init__(self, user: dict, url: str, email: List[EmailStr]):
         self.name = user['name']
-        self.sender = 'Codevo <admin@admin.com>'
+        self.sender = 'Admin <admin@admin.com>'
         self.email = email
         self.url = url
         pass

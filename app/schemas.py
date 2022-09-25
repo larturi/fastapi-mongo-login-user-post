@@ -86,3 +86,16 @@ class ListPostResponse(BaseModel):
     status: str
     results: int
     posts: List[PostResponse]
+
+
+class RoleBaseSchema(BaseModel):
+    name: str
+    description: str
+    enabled: bool
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+    
+    
+class CreateRoleSchema(RoleBaseSchema):
+    user: str 
+    pass
