@@ -99,3 +99,17 @@ class RoleBaseSchema(BaseModel):
 class CreateRoleSchema(RoleBaseSchema):
     user: str 
     pass
+
+class UpdateRoleSchema(BaseModel):
+    name: str
+    description: str
+    enabled: bool
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+    user: str | None = None
+
+    class Config:
+        orm_mode = True
+        allow_population_by_field_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}

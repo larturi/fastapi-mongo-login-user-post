@@ -36,6 +36,19 @@ def create_role(role: schemas.CreateRoleSchema, user_id: str = Depends(require_u
                             detail=f"Role with name: {role.name} already exists")
             
 
+@router.put('/{id}')
+def update_role(id: str, payload: schemas.UpdateRoleSchema, user_id: str = Depends(require_user)):
+    if not ObjectId.is_valid(id):
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"Invalid id: {id}")
+    updated_role = Role.find_one_and_update(
+        {'_id': ObjectId(id)}, {'$set': payload.dict(exclude_none=True)}, return_document=ReturnDocument.AFTER)
+    if not updated_role:
+        raise HTTPException(status_code=status.HTTP_200_OK,
+                            detail=f'No role with this id: {id} found')
+    return roleEntity(updated_role)
+
+
 @router.get('/{id}')
 def get_role(id: str):
     if not ObjectId.is_valid(id):
