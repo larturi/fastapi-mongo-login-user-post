@@ -34,3 +34,28 @@ def create_role(role: schemas.CreateRoleSchema, user_id: str = Depends(require_u
         else:
             raise HTTPException(status_code=status.HTTP_409_CONFLICT,
                             detail=f"Role with name: {role.name} already exists")
+            
+
+@router.get('/{id}')
+def get_role(id: str):
+    if not ObjectId.is_valid(id):
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"Invalid id: {id}")
+
+    role = Role.find_one({'_id': ObjectId(id)})
+    if not role:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"No role with this id: {id} found")
+    return roleEntity(role)
+
+
+@router.delete('/{id}')
+def delete_role(id: str):
+    if not ObjectId.is_valid(id):
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"Invalid id: {id}")
+    role = Role.find_one_and_delete({'_id': ObjectId(id)})
+    if not role:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f'No role with this id: {id} found')
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
